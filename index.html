@@ -401,6 +401,27 @@ margin-bottom: 20px;
     background-color: #b33a3a;
 }
 
+    #expired-page {
+    display: none;
+}
+
+#expired-page h1 {
+    color: #168c8c;
+    font-weight: bold;
+}
+
+.expired-message p {
+    margin: 4px 0;
+    font-style: italic;
+    color: #555;
+}
+
+.expired-contact {
+    color: #168c8c;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
 .empty-state {
     text-align: center;
     background-color: white;
@@ -529,6 +550,25 @@ margin-bottom: 20px;
 
     </div>
 </div>
+    <div id="expired-page">
+    <div class="welcome-box">
+
+        <div class="welcome-icon">🔒</div>
+
+        <h1>Your Order Board is Paused</h1>
+
+        <div class="expired-message">
+            <p>Your subscription has expired.</p>
+            <p>Renew to continue using your Order Board.</p>
+            <p>Your saved orders are still here.</p>
+        </div>
+
+        <p class="expired-contact">
+            Please contact us to renew.
+        </p>
+
+    </div>
+</div>
     
     <h1>🍳 My Kitchen Order Board</h1>
 
@@ -643,13 +683,34 @@ margin-bottom: 20px;
 
 <script>
 
+const SUBSCRIPTION_EXPIRY = "2026-09-01";
+
+function isSubscriptionExpired() {
+    const today = new Date();
+    const expiryDate = new Date(SUBSCRIPTION_EXPIRY + "T23:59:59");
+
+    return today > expiryDate;
+}
+    
 function openOrderBoard() {
+    if (isSubscriptionExpired()) {
+        document.getElementById("welcome-page").style.display = "none";
+        document.getElementById("expired-page").style.display = "block";
+        return;
+    }
+
     document.getElementById("welcome-page").style.display = "none";
 }
     
    function showMessage() {
+    if (isSubscriptionExpired()) {
+        alert("Your subscription has expired. Please renew your subscription to continue using your Order Board.");
+        return;
+    }
+
     document.getElementById("order-form").style.display = "block";
 }
+    
 function addItem() {
     const container = document.getElementById("items-container");
 
@@ -757,6 +818,11 @@ location.reload();
 }
 
 function editOrder(orderId) {
+     if (isSubscriptionExpired()) {
+        alert("Your subscription has expired. Please renew your subscription to continue using your Order Board.");
+        return;
+    }
+
     let savedOrders = JSON.parse(localStorage.getItem("kitchenOrders")) || [];
 
     const order = savedOrders.find(function(order) {
@@ -872,6 +938,11 @@ newOrder.innerHTML = `
 }
 
 function changeStatus(select, orderId) {
+      if (isSubscriptionExpired()) {
+        alert("Your subscription has expired. Please renew your subscription to continue using your Order Board.");
+        return;
+    }
+
     let savedOrders = JSON.parse(localStorage.getItem("kitchenOrders")) || [];
 
     const order = savedOrders.find(function(order) {
@@ -887,6 +958,11 @@ function changeStatus(select, orderId) {
 }
 
 function deleteOrder(orderId) {
+     if (isSubscriptionExpired()) {
+        alert("Your subscription has expired. Please renew your subscription to continue using your Order Board.");
+        return;
+    }
+
     deletingOrderId = orderId;
 
     document.getElementById("delete-modal").style.display = "flex";
@@ -977,6 +1053,11 @@ function cancelDelete() {
 }
 
 function confirmDelete() {
+       if (isSubscriptionExpired()) {
+        alert("Your subscription has expired. Please renew your subscription to continue using your Order Board.");
+        return;
+    }
+
     if (deletingOrderId === null) {
         return;
     }
