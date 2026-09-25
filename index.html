@@ -401,6 +401,10 @@ margin-bottom: 20px;
     background-color: #b33a3a;
 }
 
+#order-board {
+    display: none;
+}
+    
     #expired-page {
     display: none;
 }
@@ -569,6 +573,8 @@ margin-bottom: 20px;
 
     </div>
 </div>
+
+    <div id="order-board">
     
     <h1>🍳 My Kitchen Order Board</h1>
 
@@ -683,7 +689,7 @@ margin-bottom: 20px;
 
 <script>
 
-const SUBSCRIPTION_EXPIRY = "2026-09-01";
+const SUBSCRIPTION_EXPIRY = "2026-12-31";
 
 function isSubscriptionExpired() {
     const today = new Date();
@@ -696,10 +702,12 @@ function openOrderBoard() {
     if (isSubscriptionExpired()) {
         document.getElementById("welcome-page").style.display = "none";
         document.getElementById("expired-page").style.display = "block";
+        document.getElementById("order-board").style.display = "block";
         return;
     }
 
     document.getElementById("welcome-page").style.display = "none";
+    document.getElementById("order-board").style.display = "block";
 }
     
    function showMessage() {
@@ -1090,6 +1098,8 @@ function getCurrencySymbol(currency) {
 }
 
 </script>
+
+</div>
 
 <div id="delete-modal" class="delete-modal">
     <div class="delete-box">
