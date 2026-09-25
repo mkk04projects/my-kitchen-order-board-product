@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Kitchen Order Board</title>
+<style>
+
+   body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f3ee;
+    margin: 0;
+    padding: 40px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    h1 {
+        color: #5a3e36;
+    }
+
+ .order-card {
+    background-color: white;
+    padding: 22px;
+    margin-top: 20px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid #5a3e36;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#orders-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+#orders-list .order-card {
+    margin-top: 0;
+}
+
+@media (max-width: 700px) {
+    #orders-list {
+        grid-template-columns: 1fr;
+    }
+}
+
+.order-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.12);
+}
+
+.order-card h3 {
+    color: #5a3e36;
+    font-size: 22px;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+.order-header {
+    margin-bottom: 15px;
+}
+
+.order-header h3 {
+    margin: 3px 0 0 0;
+}
+
+.order-number {
+    color: #168c8c;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.order-card p {
+    color: #555;
+    font-size: 15px;
+    margin: 8px 0;
+}
+
+.order-section {
+    background-color: #faf7f3;
+    border: 1px solid #e6ddd5;
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-top: 12px;
+}
+
+.order-section h4 {
+    color: #5a3e36;
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.order-section p {
+    margin: 6px 0;
+    color: #555;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid #e8e0d9;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.item-name {
+    color: #444;
+    font-size: 15px;
+}
+
+.item-quantity {
+    color: #168c8c;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.order-section p {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.order-section p span:last-child {
+    color: #168c8c;
+    font-weight: 600;
+}
+
+.remaining-row {
+    background-color: #eadfd6;
+    padding: 8px 10px !important;
+    border-radius: 6px;
+}
+
+button {
+    background-color: #5a3e36;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+margin-bottom: 20px;
+}
+
+#order-form {
+    display: none;
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+#order-form label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#order-form input,
+#order-form textarea {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+#order-currency {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: #f3ebe4;
+    color: #333;
+}
+
+#order-status {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    background-color: #f3ebe4;
+    color: #333;
+}
+
+.order-card select {
+    background-color: #eadfd6;
+    color: #333;
+    border: 1px solid #d5c8be;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 15px;
+}
+
+.item-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.item-row input[type="text"] {
+    flex: 2;
+    width: auto;
+    min-width: 0;
+}
+
+.item-row input[type="number"] {
+    flex: 1;
+    width: auto;
+    min-width: 0;
+}
+
+.item-row button {
+    width: 40px;
+    flex-shrink: 0;
+    padding: 5px;
+    background-color: #ddd;
+    color: #333;
+    font-size: 18px;
+}
+.order-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+.order-actions button {
+    width: 40px;
+    padding: 6px;
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 18px;
+}
+
+.delete-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.delete-box {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 350px;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.delete-box h2 {
+    color: #5a3e36;
+    margin-top: 0;
+}
+
+.delete-box p {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.delete-box button {
+    margin: 5px;
+}
+
+.delete-box button:last-child {
+    background-color: #b33a3a;
+}
+
+.empty-state {
+    text-align: center;
+    background-color: white;
+    padding: 45px 20px;
+    margin-top: 20px;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    border-left: 5px solid #5a3e36;
+}
+
+.empty-icon {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
+
+.empty-state h3 {
+    color: #5a3e36;
+    margin: 5px 0;
+}
+
+.empty-state p {
+    color: #777;
+    margin: 8px 0 0;
+}
+
+.order-filters {
+    display: flex;
+    gap: 12px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.summary-box {
+    background-color: #c4a59a;
+    border: 1px solid #e6ddd5;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+}
+
+.summary-number {
+    color: #5a3e36;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.summary-label {
+    color: #777;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+@media (max-width: 700px) {
+    .dashboard-summary {
+        grid-template-columns: 1fr;
+    }
+}
+
+#search-orders {
+    flex: 2;
+    padding: 12px 15px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: white;
+}
+
+#status-filter {
+    flex: 1;
+    padding: 12px 15px;
+    box-sizing: border-box;
+    border: 1px solid #d5c8be;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: white;
+    color: #333;
+}
+
+#search-orders:focus,
+#status-filter:focus {
+    outline: none;
+    border-color: #168c8c;
+}
+
+@media (max-width: 700px) {
+    .order-filters {
+        flex-direction: column;
+    }
+}
+
+</style>
+
+</head>
+<body>
+
+    <h1>🍳 My Kitchen Order Board</h1>
+
+    <p>Made with love, served with magic ✨</p>
+
+    <hr>
+
+    <h2>My Orders</h2>
+
+<div class="dashboard-summary">
+
+    <div class="summary-box">
+        <div class="summary-number" id="total-orders-count">0</div>
+        <div class="summary-label">Total Orders</div>
+    </div>
+
+    <div class="summary-box">
+        <div class="summary-number" id="pending-orders-count">0</div>
+        <div class="summary-label">Pending</div>
+    </div>
+
+    <div class="summary-box">
+        <div class="summary-number" id="completed-orders-count">0</div>
+        <div class="summary-label">Completed</div>
+    </div>
+
+</div>
+
+<div class="order-filters">
+
+    <input 
+        type="text" 
+        id="search-orders" 
+        placeholder="🔎 Search orders by customer name..."
+        oninput="filterOrders()"
+    >
+
+    <select id="status-filter" onchange="filterOrders()">
+        <option value="All">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="Confirmed">Confirmed</option>
+        <option value="Preparing">Preparing</option>
+        <option value="Ready">Ready</option>
+        <option value="Completed">Completed</option>
+    </select>
+
+</div>
+
+<button onclick="showMessage()">+ Add Order</button>
+<div id="order-form">
+
+    <h2>New Order</h2>
+
+    <label>Customer Name</label>
+    <input type="text" id="customer-name">
+
+    <label>Items</label>
+
+<div id="items-container">
+
+    <div class="item-row">
+        <input type="text" placeholder="Item name">
+        <input type="number" placeholder="Quantity" min="1">
+    </div>
+
+</div>
+
+<button type="button" onclick="addItem()">+ Add Another Item</button>
+
+    <label>Date</label>
+    <input type="date" id="order-date">
+
+    <label>Time</label>
+    <input type="time" id="order-time">
+
+    <label>Total Amount</label>
+    <input type="number" id="total-amount">
+
+    <label>Amount Paid</label>
+    <input type="number" id="amount-paid">
+
+    <label>Currency</label>
+        <select id="order-currency">
+        <option value="PKR">🇵🇰 Pakistani Rupee — PKR (Rs)</option>
+        <option value="INR">🇮🇳 Indian Rupee — INR (₹)</option>
+        <option value="USD">🇺🇸 US Dollar — USD ($)</option>
+        <option value="EUR">🇪🇺 Euro — EUR (€)</option>
+        <option value="JPY">🇯🇵 Japanese Yen — JPY (¥)</option>
+        <option value="CNY">🇨🇳 Chinese Yuan — CNY (¥ / 元)</option>
+        <option value="TRY">🇹🇷 Turkish Lira — TRY (₺)</option>
+    </select>
+
+    <label>Notes</label>
+    <textarea id="order-notes"></textarea>
+
+<label>Status</label>
+<select id="order-status">
+    <option value="Pending">Pending</option>
+    <option value="Confirmed">Confirmed</option>
+    <option value="Preparing">Preparing</option>
+    <option value="Ready">Ready</option>
+    <option value="Completed">Completed</option>
+</select>
+
+<button id="save-order-button" onclick="saveOrder()">Save Order</button>
+
+</div>
+
+<div id="orders-list">
+
+</div>
+
+<script>
+
+   function showMessage() {
+    document.getElementById("order-form").style.display = "block";
+}
+function addItem() {
+    const container = document.getElementById("items-container");
+
+    const newItem = document.createElement("div");
+    newItem.className = "item-row";
+
+    newItem.innerHTML = `
+        <input type="text" placeholder="Item name">
+        <input type="number" placeholder="Quantity" min="1">
+        <button type="button" onclick="removeItem(this)">−</button>
+    `;
+
+    container.appendChild(newItem);
+}
+function removeItem(button) {
+    button.parentElement.remove();
+}
+
+let editingOrderId = null;
+let deletingOrderId = null;
+
+function saveOrder() {
+    const customerName = document.getElementById("customer-name").value;
+    const orderStatus = document.getElementById("order-status").value;
+    const orderCurrency = document.getElementById("order-currency").value;
+    const orderDate = document.getElementById("order-date").value;
+    const orderTime = document.getElementById("order-time").value;
+    const totalAmount = document.getElementById("total-amount").value;
+    const amountPaid = document.getElementById("amount-paid").value;
+    const notes = document.getElementById("order-notes").value;
+
+    const items = document.querySelectorAll("#items-container .item-row");
+
+    let orderItems = [];
+
+    items.forEach(function(item) {
+        const itemName = item.querySelector('input[type="text"]').value;
+        const quantity = item.querySelector('input[type="number"]').value;
+
+        if (itemName) {
+            orderItems.push({
+                name: itemName,
+                quantity: quantity
+            });
+        }
+    });
+
+    const remaining = totalAmount - amountPaid;
+
+   let savedOrders = JSON.parse(localStorage.getItem("kitchenOrders")) || [];
+
+let orderNumber;
+
+if (editingOrderId !== null) {
+    const existingOrder = savedOrders.find(function(order) {
+        return order.id === editingOrderId;
+    });
+
+    orderNumber = existingOrder.orderNumber;
+} else {
+    let nextOrderNumber = parseInt(localStorage.getItem("nextOrderNumber")) || 1;
+
+    orderNumber = String(nextOrderNumber).padStart(3, "0");
+
+    localStorage.setItem("nextOrderNumber", nextOrderNumber + 1);
+}
+
+    const order = {
+        id: Date.now(),
+       orderNumber: orderNumber,
+        customerName: customerName,
+        items: orderItems,
+        status: orderStatus,
+        currency: orderCurrency,
+        date: orderDate,
+        time: orderTime,
+        total: totalAmount,
+        paid: amountPaid,
+        remaining: remaining,
+        notes: notes
+    };
+
+if (editingOrderId !== null) {
+
+    const orderIndex = savedOrders.findIndex(function(order) {
+        return order.id === editingOrderId;
+    });
+
+    if (orderIndex !== -1) {
+        order.id = editingOrderId;
+        savedOrders[orderIndex] = order;
+    }
+
+    editingOrderId = null;
+
+} else {
+
+    savedOrders.push(order);
+
+}
+
+localStorage.setItem("kitchenOrders", JSON.stringify(savedOrders));
+
+location.reload();
+}
+
+function editOrder(orderId) {
+    let savedOrders = JSON.parse(localStorage.getItem("kitchenOrders")) || [];
+
+    const order = savedOrders.find(function(order) {
+        return order.id === orderId;
+    });
+
+    if (!order) {
+        return;
+    }
+
+    editingOrderId = orderId;
+
+    document.getElementById("customer-name").value = order.customerName;
+    document.getElementById("order-status").value = order.status;
+    document.getElementById("order-currency").value = order.currency || "PKR";
+    document.getElementById("order-date").value = order.date;
+    document.getElementById("order-time").value = order.time;
+    document.getElementById("total-amount").value = order.total;
+    document.getElementById("amount-paid").value = order.paid;
+    document.getElementById("order-notes").value = order.notes;
+
+    const container = document.getElementById("items-container");
+    container.innerHTML = "";
+
+    order.items.forEach(function(item, index) {
+        const newItem = document.createElement("div");
+        newItem.className = "item-row";
+
+        newItem.innerHTML = `
+            <input type="text" placeholder="Item name" value="${item.name}">
+            <input type="number" placeholder="Quantity" min="1" value="${item.quantity}">
+            ${index > 0 ? '<button type="button" onclick="removeItem(this)">−</button>' : ''}
+        `;
+
+        container.appendChild(newItem);
+    });
+
+document.getElementById("order-form").style.display = "block";
+
+document.getElementById("save-order-button").textContent = "Update Order";
+
+document.getElementById("order-form").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+});
+}
+
+function displayOrder(order) {
+    let itemsText = "";
+
+  order.items.forEach(function(item) {
+    itemsText += `
+        <div class="order-item">
+            <span class="item-name">${item.name}</span>
+            <span class="item-quantity">× ${item.quantity}</span>
+        </div>
+    `;
+});
+
+    const newOrder = document.createElement("div");
+    newOrder.className = "order-card";
+
+newOrder.innerHTML = `
+        <div class="order-header">
+            <span class="order-number">#${order.orderNumber || "001"}</span>
+            <h3>${order.customerName}</h3>
+        </div>
+
+        <div class="order-section">
+            <h4>Order</h4>
+
+        <div class="order-section">
+            <h4>Order</h4>
+            ${itemsText}
+        </div>
+
+        <div class="order-section">
+            <h4>Status</h4>
+            <select onchange="changeStatus(this, ${order.id})">
+                <option value="Pending" ${order.status === "Pending" ? "selected" : ""}>Pending</option>
+                <option value="Confirmed" ${order.status === "Confirmed" ? "selected" : ""}>Confirmed</option>
+                <option value="Preparing" ${order.status === "Preparing" ? "selected" : ""}>Preparing</option>
+                <option value="Ready" ${order.status === "Ready" ? "selected" : ""}>Ready</option>
+                <option value="Completed" ${order.status === "Completed" ? "selected" : ""}>Completed</option>
+            </select>
+        </div>
+
+<div class="order-section">
+    <h4>Date & Time</h4>
+    <p><span>Date</span><span>${order.date}</span></p>
+    <p><span>Time</span><span>${order.time}</span></p>
+</div>
+
+<div class="order-section">
+    <h4>Payment</h4>
+    <p><span>Total</span><span>${getCurrencySymbol(order.currency)} ${order.total}</span></p>
+    <p><span>Paid</span><span>${getCurrencySymbol(order.currency)} ${order.paid}</span></p>
+    <p class="remaining-row"><span>Remaining</span><span>${getCurrencySymbol(order.currency)} ${order.remaining}</span></p>
+</div>
+
+        <div class="order-section">
+            <h4>Notes</h4>
+            <p>${order.notes || "No notes added."}</p>
+        </div>
+
+        <div class="order-actions">
+            <button type="button" onclick="editOrder(${order.id})" title="Edit Order">✏️</button>
+            <button type="button" onclick="deleteOrder(${order.id})" title="Delete Order">🗑️</button>
+        </div>
+    `;
+
+    document.getElementById("orders-list").appendChild(newOrder);
+}
+
+function changeStatus(select, orderId) {
+    let savedOrders = JSON.parse(localStorage.getItem("kitchenOrders")) || [];
+
+    const order = savedOrders.find(function(order) {
+        return order.id === orderId;
+    });
+
+    if (order) {
+        order.status = select.value;
+        localStorage.setItem("kitchenOrders", JSON.stringify(savedOrders));
+
+        updateDashboard();
+    }
+}
+
+function deleteOrder(orderId) {
+    deletingOrderId = orderId;
+
+    document.getElementById("delete-modal").style.display = "flex";
+}
+
+let savedOrders = JSON.parse(localStorage.getItem("kitchenOrders")) || [];
+
+savedOrders.forEach(function(order) {
+    displayOrder(order);
+});
+function showEmptyState() {
+    const ordersList = document.getElementById("orders-list");
+
+    if (savedOrders.length === 0) {
+        ordersList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🍰</div>
+                <h3>No orders yet</h3>
+                <p>Your delicious orders will appear here.</p>
+            </div>
+        `;
+    }
+}
+
+showEmptyState();
+
+function updateDashboard() {
+    const totalOrders = savedOrders.length;
+
+    const pendingOrders = savedOrders.filter(function(order) {
+        return order.status !== "Completed";
+    }).length;
+
+    const completedOrders = savedOrders.filter(function(order) {
+        return order.status === "Completed";
+    }).length;
+
+    document.getElementById("total-orders-count").textContent = totalOrders;
+    document.getElementById("pending-orders-count").textContent = pendingOrders;
+    document.getElementById("completed-orders-count").textContent = completedOrders;
+}
+
+updateDashboard();
+
+function filterOrders() {
+    // Get the latest orders from localStorage
+    savedOrders = JSON.parse(localStorage.getItem("kitchenOrders")) || [];
+
+    const searchText = document.getElementById("search-orders").value.toLowerCase();
+    const selectedStatus = document.getElementById("status-filter").value;
+
+    const ordersList = document.getElementById("orders-list");
+
+    ordersList.innerHTML = "";
+
+    const filteredOrders = savedOrders.filter(function(order) {
+
+        const matchesSearch = order.customerName
+            .toLowerCase()
+            .includes(searchText);
+
+        const matchesStatus =
+            selectedStatus === "All" || order.status === selectedStatus;
+
+        return matchesSearch && matchesStatus;
+    });
+
+    if (filteredOrders.length === 0) {
+        ordersList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-icon">🔎</div>
+                <h3>No orders found</h3>
+                <p>Try changing your search or status filter.</p>
+            </div>
+        `;
+        return;
+    }
+
+    filteredOrders.forEach(function(order) {
+        displayOrder(order);
+    });
+}
+
+function cancelDelete() {
+    deletingOrderId = null;
+
+    document.getElementById("delete-modal").style.display = "none";
+}
+
+function confirmDelete() {
+    if (deletingOrderId === null) {
+        return;
+    }
+
+    let savedOrders = JSON.parse(localStorage.getItem("kitchenOrders")) || [];
+
+    savedOrders = savedOrders.filter(function(order) {
+        return order.id !== deletingOrderId;
+    });
+
+    localStorage.setItem("kitchenOrders", JSON.stringify(savedOrders));
+
+    deletingOrderId = null;
+
+    location.reload();
+}
+
+function getCurrencySymbol(currency) {
+    const symbols = {
+        PKR: "Rs",
+        INR: "₹",
+        USD: "$",
+        EUR: "€",
+        JPY: "¥",
+        CNY: "¥",
+        TRY: "₺"
+    };
+
+    return symbols[currency] || currency;
+}
+
+</script>
+
+<div id="delete-modal" class="delete-modal">
+    <div class="delete-box">
+        <h2>Delete Order?</h2>
+        <p>Are you sure you want to delete this order?</p>
+
+        <button type="button" onclick="cancelDelete()">Cancel</button>
+        <button type="button" onclick="confirmDelete()">Delete</button>
+    </div>
+</div>
+
+</body>
+</html>
