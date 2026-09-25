@@ -4,6 +4,96 @@
     <title>My Kitchen Order Board</title>
 <style>
 
+    #welcome-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.welcome-box {
+    background-color: white;
+    max-width: 700px;
+    width: 100%;
+    padding: 55px 40px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.welcome-icon {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.welcome-box h1 {
+    color: #5a3e36;
+    font-size: 38px;
+    margin: 10px 0;
+}
+
+.welcome-subtitle {
+    color: #168c8c;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0 18px;
+}
+
+.welcome-description {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 560px;
+    margin: 0 auto 30px;
+}
+
+.welcome-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    max-width: 500px;
+    margin: 0 auto 30px;
+}
+
+.welcome-features div {
+    background-color: #faf7f3;
+    border: 1px solid #e6ddd5;
+    border-radius: 10px;
+    padding: 14px;
+    color: #5a3e36;
+    font-weight: bold;
+}
+
+.welcome-box button {
+    background-color: #5a3e36;
+    color: white;
+    border: none;
+    padding: 13px 24px;
+    border-radius: 9px;
+    cursor: pointer;
+    font-size: 16px;
+    margin: 0;
+}
+
+.welcome-box button:hover {
+    background-color: #168c8c;
+}
+
+@media (max-width: 600px) {
+    .welcome-box {
+        padding: 40px 20px;
+    }
+
+    .welcome-box h1 {
+        font-size: 30px;
+    }
+
+    .welcome-features {
+        grid-template-columns: 1fr;
+    }
+}
    body {
     font-family: Arial, sans-serif;
     background-color: #f7f3ee;
@@ -387,6 +477,36 @@ margin-bottom: 20px;
 </head>
 <body>
 
+    <div id="welcome-page">
+    <div class="welcome-box">
+
+        <div class="welcome-icon">🍳</div>
+
+        <h1>My Kitchen Order Board</h1>
+
+        <p class="welcome-subtitle">
+            A simple way to keep your kitchen orders organized.
+        </p>
+
+        <p class="welcome-description">
+            Manage customer orders, track payments, update order status,
+            and keep everything in one place — without complicated software.
+        </p>
+
+        <div class="welcome-features">
+            <div>📋 Manage Orders</div>
+            <div>💰 Track Payments</div>
+            <div>🔄 Update Status</div>
+            <div>🔎 Search Orders</div>
+        </div>
+
+        <button type="button" onclick="openOrderBoard()">
+            Enter My Order Board →
+        </button>
+
+    </div>
+</div>
+    
     <h1>🍳 My Kitchen Order Board</h1>
 
     <p>Made with love, served with magic ✨</p>
@@ -500,6 +620,10 @@ margin-bottom: 20px;
 
 <script>
 
+function openOrderBoard() {
+    document.getElementById("welcome-page").style.display = "none";
+}
+    
    function showMessage() {
     document.getElementById("order-form").style.display = "block";
 }
