@@ -26,6 +26,24 @@
 .welcome-icon {
     font-size: 55px;
     margin-bottom: 10px;
+    animation: eggWobble 3s ease-in-out infinite;
+}
+    @keyframes eggWobble {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(-5deg);
+    }
+
+    50% {
+        transform: rotate(5deg);
+    }
+
+    75% {
+        transform: rotate(-3deg);
+    }
 }
 
 .welcome-box h1 {
@@ -64,6 +82,16 @@
     padding: 14px;
     color: #5a3e36;
     font-weight: bold;
+    animation: featureFloat 4s ease-in-out infinite;
+}
+    @keyframes featureFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
 }
 
 .welcome-box button {
@@ -486,11 +514,6 @@ margin-bottom: 20px;
 
         <p class="welcome-subtitle">
             A simple way to keep your kitchen orders organized.
-        </p>
-
-        <p class="welcome-description">
-            Manage customer orders, track payments, update order status,
-            and keep everything in one place — without complicated software.
         </p>
 
         <div class="welcome-features">
