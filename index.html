@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Kitchen Order Board</title>
 <style>
 
@@ -286,6 +287,10 @@ margin-bottom: 20px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 15px;
+}
+    
+  #order-form select {
+    margin-bottom: 12px;
 }
     
 #order-form select {
@@ -745,6 +750,11 @@ let editingOrderId = null;
 let deletingOrderId = null;
 
 function saveOrder() {
+       if (isSubscriptionExpired()) {
+        alert("Your subscription has expired. Please renew your subscription to continue using your Order Board.");
+        return;
+    }
+    
     const customerName = document.getElementById("customer-name").value;
     const orderStatus = document.getElementById("order-status").value;
     const orderCurrency = document.getElementById("order-currency").value;
